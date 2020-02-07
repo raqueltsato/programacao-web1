@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+    <style>
+        .container {
+            padding: 5%;
+            width: 40%;
+        }
+
+        body {
+            background-image: url('japan.jpeg');
+            background-repeat: no-repeat;
+            background-color: #cccccc;
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <!-- Links -->
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="Home.html">Home</a>
+            </li>            
+            <li class="nav-item">
+                <a class="nav-link" href="Cadastrar.html">Cadastrar Usuário</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="Listar.html">Listar Usuário</a>
+            </li>
+
+
+        </ul>
+
+    </nav>
+
+
+    <div class="container">
+
+        <h2>Cadastro de Usuário</h2>
+        <form action="/action_page.php">
+            <div class="form-group">
+                <input type="hidden" id="id" name="id">
+                <label for="first_name">Primeiro Nome:</label>
+                <input type="text" class="form-control" id="first_name" placeholder="Primeiro Nome" name="first_name">
+            </div>
+            <div class="form-group">
+                <label for="last_name">Sobrenome:</label>
+                <input type="text" class="form-control" id="last_name" placeholder="Sobrenome" name="last_name">
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="text" class="form-control" id="email" placeholder="E-mail" name="email">
+            </div>
+            <div class="form-group form-check">
+
+            </div>
+            <input type="button" onclick="cadastro()" class="btn btn-primary" value="Cadastrar">
+
+        </form>
+        <p id="valorDigitado"></p>
+    </div>
+    <script>
+
+        function emailIsValid(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+        }
+
+        function cadastro() {
+
+            let nome = document.getElementById("first_name").value;
+            let sobrenome = document.getElementById("last_name").value;
+            var email = document.getElementById("email").value;
+
+
+            console.log(nome);
+            console.log(sobrenome);
+            console.log(email);
+            if (nome == "" | sobrenome == "" | email == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro no preenchimento',
+                    text: 'Preencha todos os campos',
+
+                })
+                return false;
+            }
+            if (!emailIsValid(email)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erro no preenchimento',
+                    text: 'Insira um e-mail válido',
+
+                })
+                return false;
+            }
+
+            $.post("http://localhost:3000/users", { "first_name": nome, "last_name": sobrenome, "email": email }, function (result) {
+                $("result").html(result);
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Cadastro realizado com sucesso!',
+                    showConfirmButton: false,
+                    timer: 1800
+                })
+                limpaCampo();
+            });
+
+            function limpaCampo() {
+                document.getElementById("first_name").value = '';
+                document.getElementById("last_name").value = '';
+                document.getElementById("email").value = '';
+            }
+
+        };
+
+
+
+    </script>
+
+
+</body>
+
+</html>
